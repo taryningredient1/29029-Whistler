@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { STATUSES, STATUS_ICONS } from '../constants'
+import { STATUSES } from '../constants'
+import StatusIcon from '../components/StatusIcon'
 import { updateStatus } from '../lib/supabase'
 
 export default function UpdateStatus({ athlete, onBack, showToast }) {
@@ -52,7 +53,6 @@ export default function UpdateStatus({ athlete, onBack, showToast }) {
       <div className="px-4 pb-6 space-y-3">
         {STATUSES.map((status) => {
           const isCurrent = athlete?.current_status === status
-          const isNeedHelp = status === 'Need Help'
 
           return (
             <button
@@ -62,14 +62,12 @@ export default function UpdateStatus({ athlete, onBack, showToast }) {
               className={`w-full min-h-[56px] rounded-[14px] flex items-center px-5 gap-3 text-left transition-all active:scale-[0.98]
                 ${isCurrent
                   ? 'bg-burgundy text-white border-2 border-burgundy'
-                  : isNeedHelp
-                  ? 'bg-red-50 border-2 border-urgent text-urgent'
                   : 'bg-cardBg border-2 border-border text-charcoal'
                 }
                 ${saving ? 'opacity-50' : ''}
               `}
             >
-              <span className="text-[20px]">{STATUS_ICONS[status]}</span>
+              <StatusIcon status={status} size={20} />
               <span className="text-[17px] font-semibold">{status}</span>
               {isCurrent && (
                 <span className="ml-auto text-[13px] opacity-80">Current</span>

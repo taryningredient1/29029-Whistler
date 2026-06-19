@@ -1,8 +1,9 @@
 import { useAthletes } from '../hooks/useAthletes'
 import AthletePhoto from '../components/AthletePhoto'
 import MountainTriangles from '../components/MountainTriangles'
+import StatusIcon from '../components/StatusIcon'
 import { formatRelativeTime } from '../utils/time'
-import { STATUS_COLORS, STATUS_ICONS } from '../constants'
+import { STATUS_COLORS } from '../constants'
 
 // Can be rendered inline (from the Family tab) or standalone (via /family URL)
 export default function FamilyView({ athletes: propAthletes, loading: propLoading, inline = false }) {
@@ -59,23 +60,18 @@ export default function FamilyView({ athletes: propAthletes, loading: propLoadin
 }
 
 function FamilyCard({ athlete }) {
-  const isNeedHelp = athlete.current_status === 'Need Help'
   const isFinished = athlete.current_status === 'Finished'
   const statusColor = STATUS_COLORS[athlete.current_status] || 'text-charcoal'
-  const statusIcon = STATUS_ICONS[athlete.current_status] || ''
 
   return (
-    <div
-      className={`rounded-[18px] p-4 border
-        ${isNeedHelp ? 'bg-red-50 border-urgent' : isFinished ? 'bg-gray-50 border-border' : 'bg-cardBg border-border'}
-      `}
-    >
+    <div className={`rounded-[18px] p-4 border ${isFinished ? 'bg-gray-50 border-border' : 'bg-cardBg border-border'}`}>
       <div className="flex items-start gap-3">
         <AthletePhoto athlete={athlete} size="md" />
         <div className="flex-1 min-w-0">
           <p className="text-[18px] font-bold text-charcoal">{athlete.name}</p>
-          <p className={`text-[16px] font-semibold mt-0.5 ${isNeedHelp ? 'text-urgent' : statusColor}`}>
-            {statusIcon} {athlete.current_status}
+          <p className={`text-[16px] font-semibold mt-0.5 flex items-center ${statusColor}`}>
+            <StatusIcon status={athlete.current_status} size={16} />
+            {athlete.current_status}
           </p>
           <div className="mt-2">
             <MountainTriangles completed={athlete.completed_ascents} size="sm" showCount={false} />
