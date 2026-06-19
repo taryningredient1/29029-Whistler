@@ -3,14 +3,14 @@
 
 INSERT INTO athletes (name, current_status, completed_ascents, current_ascent)
 VALUES
-  ('Taryn',    'Sleeping', 0, 1),
-  ('Eve',      'Sleeping', 0, 1),
-  ('Jessica',  'Sleeping', 0, 1),
-  ('Liz',      'Sleeping', 0, 1),
-  ('Andrea',   'Sleeping', 0, 1),
-  ('Greta',    'Sleeping', 0, 1),
-  ('Heather',  'Sleeping', 0, 1),
-  ('Rebecca',  'Sleeping', 0, 1),
-  ('Samantha', 'Sleeping', 0, 1),
-  ('Vivian',   'Sleeping', 0, 1)
+  ('Taryn',    'Starting Soon', 0, 1),
+  ('Eve',      'Starting Soon', 0, 1),
+  ('Jessica',  'Starting Soon', 0, 1),
+  ('Liz',      'Starting Soon', 0, 1),
+  ('Andrea',   'Starting Soon', 0, 1),
+  ('Gretta',   'Starting Soon', 0, 1),
+  ('Heather',  'Starting Soon', 0, 1),
+  ('Rebecca',  'Starting Soon', 0, 1),
+  ('Samantha', 'Starting Soon', 0, 1),
+  ('Vivan',    'Starting Soon', 0, 1)
 ON CONFLICT DO NOTHING;

@@ -6,7 +6,6 @@ export default function TeamBoard({ athletes, loading, onAthletePress }) {
       {/* Header */}
       <div className="px-4 pt-12 pb-4 bg-cream sticky top-0 z-10">
         <h1 className="text-[24px] font-bold text-charcoal">29029 Whistler</h1>
-        <p className="text-[14px] text-warmGray mt-0.5">10 women on the mountain</p>
         <p className="text-[13px] text-inactive">Updated live</p>
       </div>
 

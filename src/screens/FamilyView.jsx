@@ -33,7 +33,7 @@ export default function FamilyView({ athletes: propAthletes, loading: propLoadin
         {!inline && (
           <div className="flex items-center gap-2 mb-2">
             <svg width="20" height="20" viewBox="0 0 20 20">
-              <polygon points="10,2 19,18 1,18" fill="#7A1E2C" />
+              <polygon points="10,2 19,18 1,18" fill="#A85878" />
             </svg>
           </div>
         )}
@@ -47,7 +47,7 @@ export default function FamilyView({ athletes: propAthletes, loading: propLoadin
         ) : allFinished ? (
           <EmptyMessage text="All ascents complete. 🏔️" />
         ) : allSleeping ? (
-          <EmptyMessage text="The team is resting." />
+          <PreRacePage />
         ) : (
           familyAthletes.map((athlete) => (
             <FamilyCard key={athlete.id} athlete={athlete} />
@@ -91,6 +91,43 @@ function FamilyCard({ athlete }) {
           <p className="text-[13px] text-inactive mt-1.5">
             Updated {formatRelativeTime(athlete.last_updated)}
           </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function PreRacePage() {
+  return (
+    <div className="text-center py-8 px-2">
+      <svg width="64" height="64" viewBox="0 0 100 100" fill="none" style={{ margin: '0 auto 20px' }}>
+        <polygon points="50,6 96,92 4,92" stroke="#A85878" strokeWidth="4" strokeLinejoin="round" fill="none"/>
+        <line x1="50" y1="6" x2="25" y2="92" stroke="#A85878" strokeWidth="3"/>
+        <line x1="50" y1="6" x2="75" y2="92" stroke="#A85878" strokeWidth="3"/>
+        <polygon points="50,38 68,72 32,72" stroke="#A85878" strokeWidth="3" strokeLinejoin="round" fill="none"/>
+      </svg>
+      <h2 className="text-[22px] font-bold text-charcoal mb-2">They're ready.</h2>
+      <p className="text-[16px] text-warmGray mb-6 leading-relaxed">
+        10 women are about to take on 29,029 feet of climbing. Your support means everything.
+      </p>
+      <div className="bg-cardBg border border-border rounded-[18px] p-5 text-left mb-4">
+        <p className="text-[15px] font-semibold text-charcoal mb-1">📍 Check back soon</p>
+        <p className="text-[14px] text-warmGray leading-relaxed">
+          Once the challenge begins, you'll see live updates from each athlete right here.
+        </p>
+      </div>
+      <div className="flex gap-3 justify-center mt-2">
+        <div className="bg-cardBg border border-border rounded-[14px] px-4 py-3 text-center">
+          <p className="text-[20px] font-bold text-burgundy">8</p>
+          <p className="text-[11px] text-warmGray">ascents</p>
+        </div>
+        <div className="bg-cardBg border border-border rounded-[14px] px-4 py-3 text-center">
+          <p className="text-[20px] font-bold text-burgundy">10</p>
+          <p className="text-[11px] text-warmGray">athletes</p>
+        </div>
+        <div className="bg-cardBg border border-border rounded-[14px] px-4 py-3 text-center">
+          <p className="text-[20px] font-bold text-burgundy">36h</p>
+          <p className="text-[11px] text-warmGray">challenge</p>
         </div>
       </div>
     </div>

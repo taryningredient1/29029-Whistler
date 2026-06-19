@@ -1,57 +1,15 @@
 import { useState, useEffect } from 'react'
-import { RECOVERY_ITEMS } from '../constants'
-import { updateRecovery, updateLmntTarget, updateLmntUsed } from '../lib/supabase'
+import { updateLmntTarget, updateLmntUsed } from '../lib/supabase'
 
 export default function RecoveryChecklist({ athlete, onBack, showToast }) {
-  const [checklist, setChecklist] = useState({
-    water: false,
-    electrolytes: false,
-    fuel: false,
-    bathroom: false,
-    ready: false,
-  })
-  const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(false)
   const [lmntUsed, setLmntUsed] = useState(0)
   const [savingLmnt, setSavingLmnt] = useState(false)
 
   useEffect(() => {
     if (athlete) {
-      setChecklist({
-        water: athlete.recovery_water || false,
-        electrolytes: athlete.recovery_electrolytes || false,
-        fuel: athlete.recovery_fuel || false,
-        bathroom: athlete.recovery_bathroom || false,
-        ready: athlete.recovery_ready || false,
-      })
       setLmntUsed(athlete.lmnt_used || 0)
     }
   }, [athlete])
-
-  const allChecked = Object.values(checklist).every(Boolean)
-
-  function toggle(key) {
-    setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
-    setSaved(false)
-  }
-
-  async function handleSave() {
-    if (!athlete) return
-    setSaving(true)
-    try {
-      const isComplete = await updateRecovery(athlete.id, checklist)
-      setSaved(true)
-      if (isComplete) {
-        showToast('Recovery complete ✓', 'success')
-      } else {
-        showToast('Recovery saved (incomplete)', 'warning')
-      }
-    } catch (err) {
-      showToast('Something went wrong', 'error')
-    } finally {
-      setSaving(false)
-    }
-  }
 
   async function handleSetTarget(target) {
     if (!athlete) return
@@ -89,20 +47,17 @@ export default function RecoveryChecklist({ athlete, onBack, showToast }) {
             ← Back
           </button>
         )}
-        <h1 className="text-[24px] font-bold text-charcoal">Recovery Check</h1>
-        <p className="text-[15px] text-warmGray mt-1">Before your next ascent.</p>
+        <h1 className="text-[24px] font-bold text-charcoal">LMNT Tracker</h1>
+        <p className="text-[15px] text-warmGray mt-1">Track your packets across the event.</p>
       </div>
 
-      <div className="px-4 pb-6 space-y-4">
-
-        {/* LMNT Tracker */}
+      <div className="px-4 pb-6">
         <div className="bg-cardBg border border-border rounded-[18px] p-5">
-          <p className="text-[16px] font-bold text-charcoal">LMNT Packets</p>
 
           {!target ? (
-            /* Target not set yet */
-            <div className="mt-3">
-              <p className="text-[14px] text-warmGray mb-3">How many packets are you targeting for the full event?</p>
+            <div>
+              <p className="text-[16px] font-bold text-charcoal mb-1">Set your target</p>
+              <p className="text-[14px] text-warmGray mb-4">How many packets are you targeting for the full event?</p>
               <div className="flex gap-3">
                 <button
                   onClick={() => handleSetTarget(12)}
@@ -119,8 +74,9 @@ export default function RecoveryChecklist({ athlete, onBack, showToast }) {
               </div>
             </div>
           ) : (
-            /* Target set — show tracker */
-            <div className="mt-3">
+            <div>
+              <p className="text-[16px] font-bold text-charcoal mb-3">LMNT Packets</p>
+
               {/* Progress bar */}
               <div className="flex justify-between text-[13px] text-warmGray mb-1.5">
                 <span>{lmntUsed} used</span>
@@ -151,6 +107,7 @@ export default function RecoveryChecklist({ athlete, onBack, showToast }) {
                 ))}
               </div>
 
+              {/* +/- counter */}
               <div className="flex items-center justify-between mt-4">
                 <button
                   onClick={() => handleLmntChange(Math.max(0, lmntUsed - 1))}
@@ -180,60 +137,13 @@ export default function RecoveryChecklist({ athlete, onBack, showToast }) {
 
               <button
                 onDoubleClick={() => handleSetTarget(null)}
-                className="mt-3 text-[12px] text-inactive underline w-full text-center"
+                className="mt-4 text-[12px] text-inactive underline w-full text-center"
               >
                 Change target (double-tap)
               </button>
             </div>
           )}
         </div>
-
-        {/* Recovery checklist */}
-        <div className="bg-cardBg border border-border rounded-[18px] overflow-hidden">
-          {RECOVERY_ITEMS.map(({ key, label }, i) => (
-            <button
-              key={key}
-              onClick={() => toggle(key)}
-              className={`w-full flex items-center gap-4 px-5 py-4 text-left transition-colors active:opacity-70
-                ${i < RECOVERY_ITEMS.length - 1 ? 'border-b border-border' : ''}
-              `}
-            >
-              <div
-                className={`w-6 h-6 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-colors
-                  ${checklist[key] ? 'bg-success border-success' : 'border-border bg-cream'}
-                `}
-              >
-                {checklist[key] && (
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <path d="M2 7l4 4 6-7" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                )}
-              </div>
-              <span className={`text-[16px] font-medium ${checklist[key] ? 'text-success' : 'text-charcoal'}`}>
-                {label}
-              </span>
-            </button>
-          ))}
-        </div>
-
-        {/* Status */}
-        {saved && (
-          <div
-            className={`rounded-[14px] p-4 text-center font-semibold text-[16px]
-              ${allChecked ? 'bg-green-50 text-success border border-success' : 'bg-amber-50 text-warning border border-warning'}
-            `}
-          >
-            {allChecked ? 'Recovery complete ✓' : 'Recovery incomplete'}
-          </div>
-        )}
-
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="w-full min-h-[54px] bg-burgundy text-white text-[17px] font-semibold rounded-[14px] active:opacity-80 disabled:opacity-50 transition-opacity"
-        >
-          {saving ? '...' : 'Save Recovery'}
-        </button>
       </div>
     </div>
   )

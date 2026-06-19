@@ -6,7 +6,7 @@ export default function SelectAthlete({ athletes, onSelect }) {
       {/* Header */}
       <div className="px-4 pt-14 pb-6">
         <h1 className="text-[24px] font-bold text-charcoal">29029 Whistler</h1>
-        <p className="text-[16px] text-warmGray mt-1">Who are you?</p>
+        <p className="text-[16px] text-warmGray mt-1">Welcome to the Team! Who's checking in?</p>
       </div>
 
       {/* Athlete list */}

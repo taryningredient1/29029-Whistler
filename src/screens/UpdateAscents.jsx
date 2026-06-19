@@ -17,9 +17,9 @@ export default function UpdateAscents({ athlete, onBack, showToast }) {
       const newCompleted = await markAscentComplete(athlete)
       const isFinished = newCompleted >= 8
       if (isFinished) {
-        showToast('All 8 ascents complete! 🏔️')
+        showToast(`All ${newCompleted} ascents complete! You've got this, ${athlete.name}.`, 'celebration')
       } else {
-        showToast(`Ascent ${athlete.current_ascent} completed`)
+        showToast(`Ascent ${athlete.current_ascent} complete! You've got this, ${athlete.name}.`, 'celebration')
       }
       onBack()
     } catch (err) {

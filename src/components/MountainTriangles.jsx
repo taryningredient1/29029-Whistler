@@ -16,8 +16,8 @@ export default function MountainTriangles({ completed = 0, size = 'sm', showCoun
           >
             <polygon
               points="10,2 19,18 1,18"
-              fill={i < completed ? '#7A1E2C' : 'none'}
-              stroke={i < completed ? '#7A1E2C' : '#D8CEC0'}
+              fill={i < completed ? '#A85878' : 'none'}
+              stroke={i < completed ? '#A85878' : '#C8B8A4'}
               strokeWidth="2"
               strokeLinejoin="round"
             />

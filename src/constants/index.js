@@ -2,27 +2,25 @@ export const STATUSES = [
   'Starting Soon',
   'Climbing',
   'Summit',
-  'Eating at Top',
+  'Fueling at Top',
   'Gondola Down',
   'Recovery',
-  'Eating at Bottom',
+  'Fueling at Bottom',
   'Sleeping',
   'Finished',
-  'Need Help',
 ]
 
 // Sort order for Team Board
 export const STATUS_SORT_ORDER = {
-  'Need Help': 0,
-  'Climbing': 1,
-  'Summit': 2,
-  'Eating at Top': 3,
-  'Gondola Down': 4,
-  'Recovery': 5,
-  'Eating at Bottom': 6,
-  'Starting Soon': 7,
-  'Sleeping': 8,
-  'Finished': 9,
+  'Climbing': 0,
+  'Summit': 1,
+  'Fueling at Top': 2,
+  'Gondola Down': 3,
+  'Recovery': 4,
+  'Fueling at Bottom': 5,
+  'Starting Soon': 6,
+  'Sleeping': 7,
+  'Finished': 8,
 }
 
 export const STARTING_SOON_OPTIONS = [
@@ -72,14 +70,13 @@ export const RECOVERY_ITEMS = [
 export const STATUS_COLORS = {
   'Climbing': 'text-burgundy',
   'Summit': 'text-success',
-  'Eating at Top': 'text-warning',
+  'Fueling at Top': 'text-warning',
   'Gondola Down': 'text-warmGray',
   'Recovery': 'text-warning',
-  'Eating at Bottom': 'text-warning',
+  'Fueling at Bottom': 'text-warning',
   'Starting Soon': 'text-burgundy',
   'Sleeping': 'text-warmGray',
   'Finished': 'text-success',
-  'Need Help': 'text-urgent',
 }
 
 // Status icons (emoji fallbacks)
@@ -87,11 +84,10 @@ export const STATUS_ICONS = {
   'Starting Soon': '🏁',
   'Climbing': '⛰️',
   'Summit': '🏔️',
-  'Eating at Top': '🍫',
+  'Fueling at Top': '🍫',
   'Gondola Down': '🚡',
   'Recovery': '💤',
-  'Eating at Bottom': '🥗',
+  'Fueling at Bottom': '🥗',
   'Sleeping': '😴',
   'Finished': '✅',
-  'Need Help': '🆘',
 }
