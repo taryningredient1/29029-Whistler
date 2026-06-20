@@ -14,12 +14,18 @@ import SelectAthlete from './screens/SelectAthlete'
 import { useAthletes } from './hooks/useAthletes'
 import { useCurrentAthlete } from './hooks/useCurrentAthlete'
 
+// Standalone wrapper — fetches its own data for the /family URL
+function FamilyStandalone() {
+  const { athletes, loading, error } = useAthletes()
+  return <FamilyView athletes={athletes} loading={loading} error={error} />
+}
+
 export default function App() {
   const location = useLocation()
 
   // Family view is standalone — no nav, no auth
   if (location.pathname === '/family') {
-    return <FamilyView />
+    return <FamilyStandalone />
   }
 
   return <MainApp />
@@ -32,7 +38,7 @@ function MainApp() {
   const [selectedAthleteId, setSelectedAthleteId] = useState(null)
   const [toast, setToast] = useState(null)
 
-  const { athletes, loading } = useAthletes()
+  const { athletes, loading, error } = useAthletes()
   const { currentAthleteId, setCurrentAthleteId } = useCurrentAthlete()
 
   const showToast = useCallback((message, type = 'success') => {
@@ -160,7 +166,7 @@ function MainApp() {
           />
         )
       case 'family':
-        return <FamilyView athletes={athletes} loading={loading} inline />
+        return <FamilyView athletes={athletes} loading={loading} error={error} inline />
       default:
         return null
     }

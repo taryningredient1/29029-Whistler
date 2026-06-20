@@ -1,17 +1,11 @@
-import { useAthletes } from '../hooks/useAthletes'
 import AthletePhoto from '../components/AthletePhoto'
 import MountainTriangles from '../components/MountainTriangles'
 import StatusIcon from '../components/StatusIcon'
 import { formatRelativeTime } from '../utils/time'
 import { STATUS_COLORS } from '../constants'
 
-// Can be rendered inline (from the Family tab) or standalone (via /family URL)
-export default function FamilyView({ athletes: propAthletes, loading: propLoading, inline = false }) {
-  // Only fetch own data when used standalone (no props passed)
-  const hook = useAthletes()
-  const athletes = propAthletes !== undefined ? propAthletes : hook.athletes
-  const loading = propLoading !== undefined ? propLoading : hook.loading
-  const error = propAthletes !== undefined ? null : hook.error
+// Pure display component — always receives athletes/loading/error as props
+export default function FamilyView({ athletes = [], loading = false, error = null, inline = false }) {
 
   const allFinished = athletes.length > 0 && athletes.every((a) => a.current_status === 'Finished')
   const allSleeping = athletes.length > 0 && athletes.every((a) => a.current_status === 'Sleeping')
