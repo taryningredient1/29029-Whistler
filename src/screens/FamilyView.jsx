@@ -7,14 +7,14 @@ import { STATUS_COLORS } from '../constants'
 
 // Can be rendered inline (from the Family tab) or standalone (via /family URL)
 export default function FamilyView({ athletes: propAthletes, loading: propLoading, inline = false }) {
-  // If used standalone (URL route), fetch own athletes
+  // Only fetch own data when used standalone (no props passed)
   const hook = useAthletes()
-  const athletes = propAthletes ?? hook.athletes
-  const loading = propLoading ?? hook.loading
+  const athletes = propAthletes !== undefined ? propAthletes : hook.athletes
+  const loading = propLoading !== undefined ? propLoading : hook.loading
+  const error = propAthletes !== undefined ? null : hook.error
 
   const allFinished = athletes.length > 0 && athletes.every((a) => a.current_status === 'Finished')
   const allSleeping = athletes.length > 0 && athletes.every((a) => a.current_status === 'Sleeping')
-  const noStartingSoon = athletes.every((a) => !a.starting_soon)
 
   const familyAthletes = athletes.map((a) => ({
     ...a,
@@ -45,6 +45,10 @@ export default function FamilyView({ athletes: propAthletes, loading: propLoadin
       <div className="px-4 pb-6 space-y-3">
         {loading ? (
           <LoadingSkeleton />
+        ) : error ? (
+          <EmptyMessage text="Couldn't load athlete data. Check your connection." />
+        ) : athletes.length === 0 ? (
+          <EmptyMessage text="No athletes found." />
         ) : allFinished ? (
           <EmptyMessage text="All ascents complete. 🏔️" />
         ) : allSleeping ? (

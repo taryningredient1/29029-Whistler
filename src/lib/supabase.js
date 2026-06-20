@@ -3,14 +3,25 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-if (!supabaseUrl || !supabaseAnonKey) {
+const hasCredentials = Boolean(supabaseUrl && supabaseAnonKey)
+
+if (!hasCredentials) {
+  // IMPORTANT: createClient() throws synchronously ("supabaseUrl is required")
+  // when these are undefined. If we let that throw at module load, it crashes
+  // the entire JS bundle before React mounts → the whole app renders blank.
+  // Instead we warn and export a null client so the UI can show an error state.
   console.error('Missing Supabase environment variables. See .env.example')
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = hasCredentials
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null
 
 // Fetch all athletes
 export async function fetchAthletes() {
+  if (!supabase) {
+    throw new Error('Supabase is not configured. Missing environment variables.')
+  }
   const { data, error } = await supabase
     .from('athletes')
     .select('*')
@@ -128,6 +139,7 @@ export async function updateLmntUsed(id, used) {
 
 // Subscribe to realtime athlete updates
 export function subscribeToAthletes(callback) {
+  if (!supabase) return null
   return supabase
     .channel('athletes-channel')
     .on(

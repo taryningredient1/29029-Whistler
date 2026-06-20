@@ -9,15 +9,17 @@ export default function AthletePhoto({ athlete, size = 'md' }) {
     xl: 'w-24 h-24 text-2xl',
   }
 
-  const initials = athlete.name
+  const name = athlete?.name || ''
+  const initials = name
     .split(' ')
     .map((n) => n[0])
+    .filter(Boolean)
     .join('')
     .toUpperCase()
     .slice(0, 2)
 
   // Each athlete has her own unique color
-  const color = ATHLETE_COLORS[athlete.name] || '#8A7C6E'
+  const color = ATHLETE_COLORS[name] || '#8A7C6E'
 
   if (athlete.photo_url) {
     return (
