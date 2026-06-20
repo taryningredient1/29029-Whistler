@@ -30,9 +30,9 @@ export default function StatusIcon({ status, size = 18 }) {
     case 'Gondola Down':
       return (
         <svg {...p}>
-          <circle cx="10" cy="7" r="4" stroke={rose} strokeWidth="2" />
-          <line x1="10" y1="11" x2="10" y2="17" stroke={rose} strokeWidth="2" strokeLinecap="round" />
-          <line x1="6" y1="17" x2="14" y2="17" stroke={rose} strokeWidth="2" strokeLinecap="round" />
+          <line x1="2" y1="3" x2="18" y2="3" stroke={rose} strokeWidth="2" strokeLinecap="round" />
+          <line x1="10" y1="3" x2="10" y2="6" stroke={rose} strokeWidth="2" />
+          <polygon points="10,17 17,6 3,6" fill={rose} />
         </svg>
       )
     case 'Wellness Room':
@@ -50,7 +50,10 @@ export default function StatusIcon({ status, size = 18 }) {
     case 'Sleeping':
       return (
         <svg {...p}>
-          <path d="M10 3 A7 7 0 1 0 10 17 A5 5 0 0 1 10 3Z" fill={rose} />
+          {/* Small z — top right */}
+          <polyline points="11,3 16,3 11,8 16,8" stroke={rose} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          {/* Large Z — bottom left */}
+          <polyline points="3,10 12,10 3,17 12,17" stroke={rose} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
         </svg>
       )
     case 'Finished':
