@@ -8,7 +8,6 @@ export default function MyDashboard({
   loading,
   onUpdateStatus,
   onUpdateAscents,
-  onPlanningAscent,
   onRecovery,
 }) {
   if (loading || !athlete) {
@@ -70,10 +69,6 @@ export default function MyDashboard({
 
         <SecondaryButton onClick={onUpdateAscents}>
           Update Ascents
-        </SecondaryButton>
-
-        <SecondaryButton onClick={onPlanningAscent}>
-          Planning Another Ascent
         </SecondaryButton>
 
         <SecondaryButton onClick={onRecovery}>

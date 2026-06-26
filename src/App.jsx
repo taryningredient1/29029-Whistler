@@ -6,7 +6,6 @@ import TeamBoard from './screens/TeamBoard'
 import MyDashboard from './screens/MyDashboard'
 import UpdateStatus from './screens/UpdateStatus'
 import UpdateAscents from './screens/UpdateAscents'
-import PlanningAscent from './screens/PlanningAscent'
 import RecoveryChecklist from './screens/RecoveryChecklist'
 import AthleteDetail from './screens/AthleteDetail'
 import FamilyView from './screens/FamilyView'
@@ -33,7 +32,7 @@ export default function App() {
 
 function MainApp() {
   const [activeTab, setActiveTab] = useState('team')
-  // screen: null (show tab) | 'athlete-detail' | 'update-status' | 'update-ascents' | 'planning-ascent' | 'recovery-screen'
+  // screen: null (show tab) | 'athlete-detail' | 'update-status' | 'update-ascents' | 'recovery-screen'
   const [screen, setScreen] = useState(null)
   const [selectedAthleteId, setSelectedAthleteId] = useState(null)
   const [toast, setToast] = useState(null)
@@ -109,15 +108,6 @@ function MainApp() {
         />
       )
     }
-    if (screen === 'planning-ascent') {
-      return (
-        <PlanningAscent
-          athlete={currentAthlete}
-          onBack={goBack}
-          showToast={showToast}
-        />
-      )
-    }
     if (screen === 'recovery-screen') {
       return (
         <RecoveryChecklist
@@ -145,7 +135,6 @@ function MainApp() {
             loading={loading}
             onUpdateStatus={() => pushScreen('update-status')}
             onUpdateAscents={() => pushScreen('update-ascents')}
-            onPlanningAscent={() => pushScreen('planning-ascent')}
             onRecovery={() => pushScreen('recovery-screen')}
           />
         )

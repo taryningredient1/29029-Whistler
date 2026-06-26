@@ -1,25 +1,57 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { STATUSES } from '../constants'
 import StatusIcon from '../components/StatusIcon'
-import { updateStatus } from '../lib/supabase'
+import { updateStatus, updateStartingSoon } from '../lib/supabase'
+
+const TIMING_OPTIONS = [
+  { label: 'Starting in 5 Min',  value: 'Starting in 5 Min' },
+  { label: 'Starting in 10 Min', value: 'Starting in 10 Min' },
+  { label: 'Starting in 30 Min', value: 'Starting in 30 Min' },
+  { label: 'Starting in 60 Min', value: 'Starting in 60 Min' },
+  { label: 'Not sure',           value: null },
+]
+
+// These statuses skip the timing question — go straight back
+const SKIP_TIMING = new Set(['Climbing', 'Starting Soon', 'Finished'])
 
 export default function UpdateStatus({ athlete, onBack, showToast }) {
   const [confirming, setConfirming] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [savingTiming, setSavingTiming] = useState(false)
+  const [statusSaved, setStatusSaved] = useState(false)
+  const timingRef = useRef(null)
 
   async function handleSelect(status) {
     if (status === 'Finished') {
       setConfirming(true)
       return
     }
-    await save(status)
-  }
-
-  async function save(status) {
     if (!athlete) return
     setSaving(true)
     try {
       await updateStatus(athlete.id, status)
+      if (SKIP_TIMING.has(status)) {
+        showToast('Status updated')
+        onBack()
+      } else {
+        showToast('Status updated')
+        setStatusSaved(true)
+        setTimeout(() => {
+          timingRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }, 100)
+      }
+    } catch (err) {
+      showToast('Something went wrong', 'error')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function saveFinished() {
+    if (!athlete) return
+    setSaving(true)
+    try {
+      await updateStatus(athlete.id, 'Finished')
       showToast('Status updated')
       onBack()
     } catch (err) {
@@ -29,11 +61,25 @@ export default function UpdateStatus({ athlete, onBack, showToast }) {
     }
   }
 
+  async function handleTimingSelect(value) {
+    if (!athlete) return
+    setSavingTiming(true)
+    try {
+      await updateStartingSoon(athlete.id, value)
+      showToast(value ? `Set: ${value}` : 'Got it!')
+      onBack()
+    } catch (err) {
+      showToast('Something went wrong', 'error')
+    } finally {
+      setSavingTiming(false)
+    }
+  }
+
   if (confirming) {
     return (
       <FinishedConfirm
         onCancel={() => setConfirming(false)}
-        onConfirm={() => save('Finished')}
+        onConfirm={saveFinished}
         saving={saving}
       />
     )
@@ -53,12 +99,11 @@ export default function UpdateStatus({ athlete, onBack, showToast }) {
       <div className="px-4 pb-6 space-y-3">
         {STATUSES.map((status) => {
           const isCurrent = athlete?.current_status === status
-
           return (
             <button
               key={status}
               onClick={() => handleSelect(status)}
-              disabled={saving}
+              disabled={saving || savingTiming}
               className={`w-full min-h-[56px] rounded-[14px] flex items-center px-5 gap-3 text-left transition-all active:scale-[0.98]
                 ${isCurrent
                   ? 'bg-burgundy text-white border-2 border-burgundy'
@@ -75,6 +120,41 @@ export default function UpdateStatus({ athlete, onBack, showToast }) {
             </button>
           )
         })}
+
+        {/* Timing section */}
+        <div ref={timingRef} className="pt-3">
+          <p className={`text-[13px] uppercase tracking-wide font-semibold mb-3 px-1 transition-colors ${
+            statusSaved ? 'text-burgundy' : 'text-warmGray'
+          }`}>
+            {statusSaved ? '✓ Status saved — when\'s your next ascent?' : 'When\'s your next ascent?'}
+          </p>
+          <div className="space-y-3">
+            {TIMING_OPTIONS.map((option) => {
+              const isCurrent = option.value !== null && athlete?.starting_soon === option.value
+              return (
+                <button
+                  key={option.label}
+                  onClick={() => handleTimingSelect(option.value)}
+                  disabled={saving || savingTiming}
+                  className={`w-full min-h-[56px] rounded-[14px] flex items-center px-5 gap-3 text-left transition-all active:scale-[0.98]
+                    ${isCurrent
+                      ? 'bg-burgundy text-white border-2 border-burgundy'
+                      : option.value === null
+                        ? 'bg-cream border-2 border-border text-warmGray'
+                        : 'bg-cardBg border-2 border-border text-charcoal'
+                    }
+                    ${savingTiming ? 'opacity-50' : ''}
+                  `}
+                >
+                  <span className="text-[17px] font-semibold">{option.label}</span>
+                  {isCurrent && (
+                    <span className="ml-auto text-[13px] opacity-80">Current</span>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        </div>
       </div>
     </div>
   )
