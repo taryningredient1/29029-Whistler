@@ -41,8 +41,8 @@ export async function updateStatus(id, status) {
     updates.completed_ascents = 8
     updates.current_ascent = 8
   }
-  // Clear starting_soon when actively climbing — planning info is no longer relevant
-  if (status === 'Climbing') {
+  // Clear starting_soon when actively moving or finished — planning info is no longer relevant
+  if (status === 'Climbing' || status === 'Starting Soon' || status === 'Finished') {
     updates.starting_soon = null
   }
   const { error } = await supabase
